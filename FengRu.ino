@@ -94,7 +94,7 @@ enum {
 // Create an area of memory to use for input, output, and intermediate arrays.
 // The size of this will depend on the model you're using, and may need to be
 // determined by experimentation.
-constexpr int kTensorArenaSize = 30 * 1024;
+constexpr int kTensorArenaSize = 50 * 1024; //初始值为 30*1024  60有第一条失败 80无第一条失败 100失败 向下调整 20失败
 uint8_t tensor_arena[kTensorArenaSize];
 
 const tflite::Model* model = nullptr;
@@ -153,6 +153,11 @@ void ReadAccelerometerAndGyroscope(int* new_accelerometer_samples,
       MicroPrintf("Failed to read acceleration data");
       break;
     }
+    current_acceleration_data[0]=current_acceleration_data[0]*100;//模型数据乘以100
+    current_acceleration_data[1]=current_acceleration_data[1]*100;//模型数据乘以100
+    current_acceleration_data[2]=current_acceleration_data[2]*100;//模型数据乘以100
+
+
     *new_accelerometer_samples += 1;
   }
 }

@@ -49,8 +49,8 @@ constexpr int raster_byte_count =
     raster_height * raster_width * raster_channels;
 int8_t raster_buffer[raster_byte_count];
 
-constexpr int label_count = 2;
-const char* labels[label_count] = {"0", "1"};
+constexpr int label_count = 3;
+const char* labels[label_count] = {"0", "1", "2"};
 
 BLEService service(BLE_SENSE_UUID("0000"));
 BLECharacteristic ansChar(BLE_SENSE_UUID("300a"),
@@ -622,7 +622,15 @@ void setup() {
         (model_output->dims->data[1] !=
          label_count) ||  // 为什么 model_output->dims->data[1] = 10 ?
         (model_output->type != kTfLiteInt8)) {
-        MicroPrintf("Bad output tensor parameters in model");
+        MicroPrintf("Bad output tensor parameters in model\n");
+        MicroPrintf(
+            "must be 1: %d\nlabel_count: %d\nmodel_output->type(should be 9): "
+            "%d\n",
+            model_output->dims->data[0], model_output->dims->data[1],
+            model_output->type);
+        MicroPrintf("output->params.zero_point: %d\noutput->params.scale: %d\n",
+                    model_output->params.zero_point,
+                    model_output->params.scale);
         return;
     }
 }
